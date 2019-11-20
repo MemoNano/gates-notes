@@ -6,55 +6,32 @@ import org.hibernate.annotations.UpdateTimestamp;
 import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
 import javax.persistence.*;
-import javax.validation.constraints.NotNull;
 import java.util.Date;
-import java.util.List;
-import java.util.Set;
 
 @Entity
 @EntityListeners(AuditingEntityListener.class)
 @Table(name = "users")
-public class User {
+public class User<localDateTime> {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY, generator = "native")
     private Long id;
 
-    @Column(length = 50, nullable = true)
-    private String lastName;
+    @Column(columnDefinition = "text")
+    private String shortDescription;
 
-    @Column(length = 50, nullable = false)
-    private String firstName;
+    @Column(columnDefinition = "text")
+    private String longDescription;
 
-    @Column(length = 50, nullable = false)
-    private String email;
+    @CreationTimestamp
+    private localDateTime createdAt;
 
-    @JsonIgnore
-    private String password;
+    @UpdateTimestamp
+    private localDateTime updatedAt;
 
-    @Transient
-    @JsonIgnore
-    private String passwordConfirm;
-
-    @ManyToMany
-    @JsonIgnore
-    private Set<Role> roles;
-
-    private Boolean isActive;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private VerificationToken verificationToken;
-
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    @JsonIgnore
-    private PasswordResetToken passwordResetToken;
 
     private String imageUrl;
 
-    @NotNull
-    @Enumerated(EnumType.STRING)
-    private AuthProvider provider;
 
     private String providerId;
 
@@ -72,17 +49,6 @@ public class User {
         this.lastName = lastName;
     }
 
-    public List<Receiver> getReceivers() {
-        return receivers;
-    }
-
-    public void setReceivers(List<Receiver> receivers) {
-        this.receivers = receivers;
-    }
-
-    @OneToMany(mappedBy = "user")
-    @JsonIgnore
-    private List<Receiver> receivers;
 
     public String getFirstName() {
         return firstName;
@@ -127,74 +93,6 @@ public class User {
 
     public void setPassword(String password) {
         this.password = password;
-    }
-
-    public String getPasswordConfirm() {
-        return passwordConfirm;
-    }
-
-    public void setPasswordConfirm(String passwordConfirm) {
-        this.passwordConfirm = passwordConfirm;
-    }
-
-    public Set<Role> getRoles() {
-        return roles;
-    }
-
-    public void setRoles(Set<Role> roles) {
-        this.roles = roles;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
-
-    public Boolean getActive() {
-        return isActive;
-    }
-
-    public void setActive(Boolean active) {
-        isActive = active;
-    }
-
-    public VerificationToken getVerificationToken() {
-        return verificationToken;
-    }
-
-    public void setVerificationToken(VerificationToken verificationToken) {
-        this.verificationToken = verificationToken;
-    }
-
-    public PasswordResetToken getPasswordResetToken() {
-        return passwordResetToken;
-    }
-
-    public void setPasswordResetToken(PasswordResetToken passwordResetToken) {
-        this.passwordResetToken = passwordResetToken;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public String getImageUrl() {
-        return imageUrl;
-    }
-
-    public void setImageUrl(String imageUrl) {
-        this.imageUrl = imageUrl;
-    }
-
-    public AuthProvider getProvider() {
-        return provider;
-    }
-
-    public void setProvider(AuthProvider provider) {
-        this.provider = provider;
     }
 
     public String getProviderId() {
